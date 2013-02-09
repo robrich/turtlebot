@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Turtlebot</title>
+	</head>
+	<body>
+		<h1>Hello world</h1>
+		<p>TODO: Build the site</p>
+		<div id="content">
+		</div>
+		<form id="theform">
+			<input type="text" id="newmessage" />
+			<input type="submit" id="send" />
+		</form>
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+
+		var socket = io.connect("/");
+
+		socket.on('connect', function () {
+			// TODO: anything?
+		});
+		socket.on('imagereceived', function (data) {
+			var div = $("<div/>");
+			div.text(JSON.stringify(data));
+			$("#content").append(div);
+		});
+		var movebot = function (data) {
+			socket.emit("movebot",data);;
+		}
+
+		$(document).ready(function () {
+			var msg = $("#newmessage");
+
+			$("#theform").submit(function (e) {
+				e.preventDefault();
+				var val = msg.val();
+				movebot({val:val});
+				msg.val('');
+				msg.focus();
+
+				return false;
+			});
+
+		});
+
+		</script>
+	</body>
+</html>
